@@ -1,9 +1,9 @@
 'use client';
 
 import { useAuth } from '@/context/auth-context';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 export default function DashboardPage() {
   const { user, logout, loading } = useAuth();
@@ -30,92 +30,71 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-black text-white">
         <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
-  if (!user) {
-    return null; // Will redirect to login
-  }
+  if (!user) return null;
+
+  const games = [
+    {
+      id: 'mic-grab',
+      title: 'Mic Grab',
+      description: 'A fast-paced mic snatching karaoke game for music lovers!',
+      image: '/images/mic-grab.webp', // Add this image to your public folder
+      href: '/languages',
+    },
+    // Future games can go here
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="h-8 w-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                <svg 
-                  className="h-5 w-5 text-white" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M13 10V3L4 14h7v7l9-11h-7z" 
-                  />
-                </svg>
-              </div>
-              <h1 className="ml-3 text-xl font-semibold text-gray-900">Dashboard</h1>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-                <img
-                  src={user.prefs?.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=3b82f6&color=fff`}
-                  alt="Profile"
-                  className="h-8 w-8 rounded-full"
-                />
-                <span className="text-sm font-medium text-gray-700">{user.name}</span>
-              </div>
-              <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-md transition-colors disabled:opacity-50"
-              >
-                {isLoggingOut ? 'Logging out...' : 'Logout'}
-              </button>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-[#0f172a] to-[#1e293b] text-white">
+      <header className="flex justify-between items-center px-6 py-4 border-b border-gray-700 bg-[#111827]">
+        <h1 className="text-2xl font-bold">🎮 Game Dashboard</h1>
+        <div className="flex items-center gap-4">
+          <span className="text-sm">{user.name}</span>
+          <img
+            src={user.prefs?.avatar || `https://ui-avatars.com/api/?name=${user.name}&background=3b82f6&color=fff`}
+            alt="User"
+            className="h-8 w-8 rounded-full"
+          />
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            className="px-3 py-1 bg-red-600 rounded hover:bg-red-700 transition disabled:opacity-50"
+          >
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
+          </button>
         </div>
-      </nav>
+      </header>
 
-      <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Welcome, {user.name}!</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-blue-900 mb-2">User Information</h3>
-                <p className="text-sm text-blue-700"><strong>Email:</strong> {user.email}</p>
-                <p className="text-sm text-blue-700"><strong>User ID:</strong> {user.$id}</p>
-                <p className="text-sm text-blue-700"><strong>Registration:</strong> {new Date(user.registration).toLocaleDateString()}</p>
+      <main className="max-w-7xl mx-auto p-6">
+        <h2 className="text-3xl font-semibold mb-6">Available Games</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {games.map((game) => (
+            <Link
+              key={game.id}
+              href={game.href}
+              className="bg-[#1f2937] rounded-xl overflow-hidden shadow-lg hover:scale-105 transition transform duration-200"
+            >
+              <img
+                src={game.image}
+                alt={game.title}
+                className="h-40 w-full object-cover"
+              />
+              <div className="p-4">
+                <h3 className="text-xl font-bold mb-2">{game.title}</h3>
+                <p className="text-sm text-gray-300">{game.description}</p>
+                <button className="mt-4 inline-block bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 text-sm font-semibold">
+                  Play Now
+                </button>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg">
-                <h3 className="font-semibold text-green-900 mb-2">Account Status</h3>
-                <p className="text-sm text-green-700"><strong>Email Verified:</strong> {user.emailVerification ? 'Yes' : 'No'}</p>
-                <p className="text-sm text-green-700"><strong>Phone Verified:</strong> {user.phoneVerification ? 'Yes' : 'No'}</p>
-              </div>
-            </div>
-          </div>
+            </Link>
+          ))}
         </div>
       </main>
-      <div className="px-4 py-6 sm:px-0">
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Let's Play, {user.name}!</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <h3 className="font-semibold text-blue-900 mb-2">Games Available</h3>
-              <Link href={"/languages"} className="bg-blue-50 p-4 rounded-lg">
-                <p className="text-sm text-blue-700"><strong>Mic Grab</strong></p>
-              </Link>
-            </div>
-          </div>
-        </div>
     </div>
   );
 }
