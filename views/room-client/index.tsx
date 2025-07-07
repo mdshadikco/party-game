@@ -465,20 +465,8 @@ export default function RoomClient({ room }: RoomClientProps) {
           </div>
         )}
 
-        <ChatSection roomId={room.$id} currentUser={user?.name} />
-
-        {/* Game stats */}
-        <div className="absolute bottom-8 left-8 text-white/80">
-          <div className="text-sm">
-            <p>Players: {participants.filter((p) => !p.isEmpty).length}/6</p>
-            <p>Room ID: {room?.$id || "ABC123"}</p>
-            <p>User: {user?.name || "Unknown"}</p>
-            <p>Debug - Ready: {currentUserReady ? "Yes" : "No"}</p>
-          </div>
-        </div>
+        <ChatSection roomId={room.$id} currentUser={user?.name} userId = {user?.$id} />
       </div>
-
-      <VoiceChatManager roomId={room.$id} userId={user.$id} />
     </div>
   );
 }
